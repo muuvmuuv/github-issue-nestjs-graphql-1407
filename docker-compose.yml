@@ -1,0 +1,22 @@
+version: "3.7"
+
+#
+# [ services ]
+#
+services:
+  database:
+    image: mongo
+    container_name: add-connect-database
+    networks:
+      - add-connect
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: add-connect
+
+#
+# [ networks ]
+#
+networks:
+  add-connect:
+    driver: bridge
