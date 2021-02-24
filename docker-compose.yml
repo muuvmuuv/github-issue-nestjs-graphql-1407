@@ -9,10 +9,25 @@ services:
     container_name: add-connect-database
     networks:
       - add-connect
+    ports:
+      - 45501:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
       MONGO_INITDB_DATABASE: add-connect
+
+  database-ui:
+    image: mongo-express
+    container_name: add-connect-database-ui
+    restart: always
+    networks:
+      - add-connect
+    ports:
+      - 45502:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_SERVER: database
 
 #
 # [ networks ]

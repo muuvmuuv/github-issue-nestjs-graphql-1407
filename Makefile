@@ -19,3 +19,7 @@ start:
 # Build
 build:
 	docker-compose build --pull --parallel
+
+# Destroy
+destroy:
+	docker-compose down

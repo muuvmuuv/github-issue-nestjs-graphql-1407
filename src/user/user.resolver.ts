@@ -1,40 +1,43 @@
-import { NotFoundException } from '@nestjs/common'
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql'
-import { PubSub } from 'apollo-server-fastify'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { ConflictException, NotFoundException } from '@nestjs/common'
+import { ObjectId, WriteError } from 'mongodb'
 
-import { NewUserInput } from './dto/new-user.input'
-import { User } from './model/user.model'
+import { ObjectIdException } from '../common/object-id.exception'
 import { UserService } from './user.service'
+import { User } from './user.entity'
+import { UserInput } from './user.input'
 
-const pubSub = new PubSub()
-
-@Resolver(() => User)
+@Resolver('User')
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => User)
-  async user(@Args('id') id: string): Promise<User> {
-    const recipe = await this.userService.findOneById(id)
-    if (!recipe) {
-      throw new NotFoundException(id)
+  async user(@Args('id') id: ObjectId): Promise<User> {
+    if (!ObjectId.isValid(id)) {
+      throw new ObjectIdException()
     }
-    return recipe
-  }
-
-  @Mutation(() => User)
-  async addUser(@Args('newUserData') newUserData: NewUserInput): Promise<User> {
-    const user = await this.userService.create(newUserData)
-    pubSub.publish('userAdded', { userAdded: user })
+    const user = await this.userService.find(id)
+    if (!user) {
+      throw new NotFoundException()
+    }
     return user
   }
 
-  @Mutation(() => Boolean)
-  async removeRecipe(@Args('id') id: string): Promise<boolean> {
-    return this.userService.remove(id)
+  @Query(() => [User])
+  async users(): Promise<User[]> {
+    return await this.userService.findAll()
   }
 
-  @Subscription(() => User)
-  recipeAdded(): AsyncIterator<User> {
-    return pubSub.asyncIterator('userAdded')
+  @Mutation(() => User)
+  async createUser(@Args('input') input: UserInput): Promise<User> {
+    try {
+      return await this.userService.create(input)
+    } catch (error_) {
+      const error = error_ as WriteError
+
+      if (error.code === 11000) {
+        throw new ConflictException('Username or email already taken')
+      }
+    }
   }
 }

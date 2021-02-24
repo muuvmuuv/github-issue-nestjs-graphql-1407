@@ -1,22 +1,33 @@
 import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { ObjectId } from 'mongodb'
+import { MongoRepository } from 'typeorm'
 
-import { NewUserInput } from './dto/new-user.input'
-import { User } from './model/user.model'
+import { User } from './user.entity'
+import { UserInput } from './user.input'
 
 @Injectable()
 export class UserService {
-  async create(data: NewUserInput): Promise<User> {
-    console.log(data)
-    return {} as User
+  constructor(
+    @InjectRepository(User)
+    private readonly user: MongoRepository<User>
+  ) {}
+
+  async find(id: ObjectId): Promise<User> {
+    return this.user.findOne({
+      _id: id,
+    })
   }
 
-  async findOneById(id: string): Promise<User> {
-    console.log(id)
-    return {} as User
+  async findAll(): Promise<User[]> {
+    return this.user.find()
   }
 
-  async remove(id: string): Promise<boolean> {
-    console.log(id)
-    return true
+  async create(input: UserInput): Promise<User> {
+    const user = new User(input)
+
+    user._id = new ObjectId()
+
+    return this.user.save(user)
   }
 }

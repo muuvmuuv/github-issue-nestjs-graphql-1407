@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import compression from 'fastify-compress'
+import { Logger } from '@nestjs/common'
 
 import { description, name, version } from '../package.json'
 import { AppModule } from './app.module'
@@ -23,7 +25,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document)
 
+  app.register(compression)
+
   await app.listen(3000)
+
+  Logger.log(`🚀 Server running on http://localhost:${3000}`, 'Bootstrap')
 }
 
 bootstrap()
