@@ -2,10 +2,11 @@
 
 ## Development
 
-- http://127.0.0.1:3000 (endpoint)
-- http://127.0.0.1:3000/api (api docs)
-- http://127.0.0.1:3000/graphql (gui)
-- http://127.0.0.1:8081/ (mongo ui)
+- http://127.0.0.1:3000 (api)
+- http://127.0.0.1:3000/docs (http docs)
+- http://127.0.0.1:3000/graphql (graphql playground and docs)
+- http://127.0.0.1:45502/ (mongo ui)
+- http://127.0.0.1:3000/health (liveness/health)
 
 ## Resources
 

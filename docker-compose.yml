@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 
 #
 # [ services ]
@@ -28,6 +28,15 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
       ME_CONFIG_MONGODB_SERVER: database
+
+  redis:
+    image: redis:alpine
+    container_name: add-connect-cache
+    restart: always
+    ports:
+      - 45503:6379
+    networks:
+      - add-connect
 
 #
 # [ networks ]
