@@ -1,22 +1,23 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ConflictException, NotFoundException } from '@nestjs/common'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ObjectId, WriteError } from 'mongodb'
 
 import { ObjectIdException } from '../common/object-id.exception'
+import { UserArguments } from './dto/user.arguments'
+import { UserInput } from './dto/user.input'
+import { User } from './model/user.model'
 import { UserService } from './user.service'
-import { User } from './user.entity'
-import { UserInput } from './user.input'
 
 @Resolver('User')
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(private userService: UserService) {}
 
   @Query(() => User)
-  async user(@Args('id') id: ObjectId): Promise<User> {
+  async user(@Args('id') id: string): Promise<User> {
     if (!ObjectId.isValid(id)) {
       throw new ObjectIdException()
     }
-    const user = await this.userService.find(id)
+    const user = await this.userService.findOne(id)
     if (!user) {
       throw new NotFoundException()
     }
@@ -24,14 +25,14 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async users(): Promise<User[]> {
-    return await this.userService.findAll()
+  async users(@Args() options: UserArguments): Promise<User[]> {
+    return await this.userService.findAll(options)
   }
 
   @Mutation(() => User)
-  async createUser(@Args('input') input: UserInput): Promise<User> {
+  async createUser(@Args('data') data: UserInput): Promise<User> {
     try {
-      return await this.userService.create(input)
+      return await this.userService.create(data)
     } catch (error_) {
       const error = error_ as WriteError
 

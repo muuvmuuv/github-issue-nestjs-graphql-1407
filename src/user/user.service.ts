@@ -4,8 +4,9 @@ import { ObjectId } from 'mongodb'
 import { MongoRepository } from 'typeorm'
 
 import { CONFIG_KEY_PVTEC } from '../config/pvtec.config'
-import { User } from './user.entity'
-import { UserInput } from './user.input'
+import { UserArguments } from './dto/user.arguments'
+import { UserInput } from './dto/user.input'
+import { User } from './model/user.model'
 
 @Injectable()
 export class UserService {
@@ -14,21 +15,21 @@ export class UserService {
     private readonly user: MongoRepository<User>
   ) {}
 
-  async find(id: ObjectId): Promise<User> {
-    return this.user.findOne({
+  async findOne(id: string): Promise<User> {
+    return await this.user.findOne({
       _id: id,
     })
   }
 
-  async findAll(): Promise<User[]> {
-    return this.user.find()
+  async findAll(options: UserArguments): Promise<User[]> {
+    return await this.user.find(options)
   }
 
   async create(input: UserInput): Promise<User> {
     const user = new User(input)
 
-    user._id = new ObjectId()
+    user._id = new ObjectId().toHexString()
 
-    return this.user.save(user)
+    return await this.user.save(user)
   }
 }

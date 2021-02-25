@@ -3,7 +3,12 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "plugins": [
-      "@nestjs/graphql"
+      {
+        "name": "@nestjs/graphql",
+        "options": {
+          "introspectComments": true
+        }
+      }
     ]
   }
 }

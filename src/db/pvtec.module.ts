@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { CONFIG_KEY_PVTEC } from '../config/pvtec.config'
 import { ConfigModule } from '../config/config.module'
 import { ConfigService } from '../config/config.service'
+import { CONFIG_KEY_PVTEC } from '../config/pvtec.config'
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { ConfigService } from '../config/config.service'
         url: config.get('pvtec.mongoDsn'),
         database: config.get('pvtec.database'),
         authSource: 'admin',
-        entities: ['dist/**/*.entity{.ts,.js}'],
+        entities: ['dist/**/*.model{.ts,.js}'],
         useNewUrlParser: true,
         keepConnectionAlive: ConfigService.isDevelopment,
         synchronize: ConfigService.isDevelopment,
