@@ -50,7 +50,7 @@ async function bootstrap() {
     max: 100,
   })
 
-  await app.listen(3000)
+  await app.listen(config.get('PORT'))
 }
 
 welcome()
