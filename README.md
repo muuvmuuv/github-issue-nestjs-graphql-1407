@@ -13,4 +13,5 @@
 - https://www.apollographql.com/
 - https://nestjs.com/
 - https://www.prisma.io/
-- https://www.joshmorony.com/using-mongodb-with-ionic-and-nestjs/
+- https://medium.com/@chnirt/how-do-i-practice-with-nestjs-nestjs-typeorm-mongodb-9e407818a296
+- https://github.com/nestjs/nest/tree/master/sample/13-mongo-typeorm

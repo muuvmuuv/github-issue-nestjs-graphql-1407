@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { plainToClass } from 'class-transformer'
 import { ObjectId } from 'mongodb'
 import { MongoRepository } from 'typeorm'
 
-import { CONFIG_KEY_PVTEC } from '../config/pvtec.config'
+import { CONFIG_KEY_APP } from '../config/app.config'
 import { UserArguments } from './dto/user.arguments'
 import { UserInput } from './dto/user.input'
 import { User } from './model/user.model'
@@ -11,7 +12,7 @@ import { User } from './model/user.model'
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User, CONFIG_KEY_PVTEC)
+    @InjectRepository(User, CONFIG_KEY_APP)
     private readonly user: MongoRepository<User>
   ) {}
 
@@ -26,7 +27,7 @@ export class UserService {
   }
 
   async create(input: UserInput): Promise<User> {
-    const user = new User(input)
+    const user = plainToClass(User, input)
 
     user._id = new ObjectId().toHexString()
 

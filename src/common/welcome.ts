@@ -2,6 +2,9 @@ import { say } from 'cfonts'
 
 import { version } from '../../package.json'
 
+/**
+ * Display a nice welcome message.
+ */
 const welcome = (): void => {
   say('ADDConnect', {
     env: 'node',

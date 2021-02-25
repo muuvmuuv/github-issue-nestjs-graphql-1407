@@ -16,9 +16,17 @@ app:
 start:
 	docker-compose up -d
 
+# Start
+start-prod:
+	docker-compose -f docker-compose.prod.yml up -d --build
+
 # Build
 build:
 	docker-compose build --pull --parallel
+
+# Build server image
+build-image:
+	docker build --build-arg NODE_VERSION=14 .
 
 # Destroy
 destroy:

@@ -1,0 +1,14 @@
+filename="certificate"
+destination="certs"
+
+domains = [
+  "add-connect.lcl"
+]
+
+commonName              = "net.additive-net.add-connect"
+countryName             = "DE"
+stateOrProvinceName     = "Germany"
+localityName            = "Frankfurt am Main"
+organizationName        = "ADDITIVE"
+organizationalUnitName  = "IT-Service"
+emailAddress            = "it-service@additive-net.de"

@@ -1,6 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { Transform } from 'class-transformer'
-import dayjs from 'dayjs'
+import { Exclude } from 'class-transformer'
 import {
   Column,
   CreateDateColumn,
@@ -16,7 +15,7 @@ import {
   description: 'A user to authenticate with',
 })
 export class User {
-  @Field(() => String)
+  @Field()
   @ObjectIdColumn()
   _id: string
 
@@ -24,21 +23,16 @@ export class User {
   @Column()
   username: string
 
+  @Exclude()
   @Field()
   @Column({ select: false })
   password: string
 
   @Field(() => Date)
   @CreateDateColumn()
-  @Transform(() => dayjs)
-  created_at: dayjs.Dayjs
+  created_at: Date
 
   @Field(() => Date)
   @UpdateDateColumn()
-  @Transform(() => dayjs)
-  updated_at: dayjs.Dayjs
-
-  constructor(entity?: Partial<User>) {
-    Object.assign(this, entity)
-  }
+  updated_at: Date
 }

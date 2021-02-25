@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common'
+import { APP_FILTER } from '@nestjs/core'
 import { GraphQLModule } from '@nestjs/graphql'
 import { RedisCache } from 'apollo-server-cache-redis'
 
 import { AppController } from './app.controller'
 import { CommonModule } from './common/common.module'
+import { HttpExceptionFilter } from './common/http-exception.filter'
 import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
-import { DatabasePvtecModule } from './db/pvtec.module'
+import { DatabaseModule } from './database/database.module'
 import { HealthModule } from './health/health.module'
 import { PvtecModule } from './pvtec/pvtec.module'
 import { UserModule } from './user/user.module'
@@ -15,11 +17,11 @@ import { UserModule } from './user/user.module'
   imports: [
     ConfigModule,
     CommonModule,
-    DatabasePvtecModule,
+    DatabaseModule,
     GraphQLModule.forRoot({
       debug: ConfigService.isDevelopment,
       playground: ConfigService.isDevelopment,
-      autoSchemaFile: 'schema.graphql',
+      autoSchemaFile: true,
       persistedQueries: ConfigService.isProduction && {
         ttl: 1000,
         cache: new RedisCache({
@@ -33,5 +35,11 @@ import { UserModule } from './user/user.module'
     PvtecModule,
   ],
   controllers: [AppController],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
